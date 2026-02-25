@@ -1,0 +1,154 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body { background-color: #f4f6f9; color: #333; }
+
+header {
+    background-color: #d32f2f;
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem 0 1rem; /* Adjusted padding for tabs */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* NAYA NAVBAR STYLING */
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.nav-btn {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 10px 10px 0 0; /* Tabs jaisa look (top rounded) */
+    cursor: pointer;
+    transition: 0.3s;
+    border-bottom: 3px solid transparent;
+}
+
+.nav-btn:hover { background-color: rgba(255, 255, 255, 0.4); }
+
+.nav-btn.active {
+    background-color: #f4f6f9; /* Same as body background */
+    color: #d32f2f;
+    border-bottom: 3px solid #d32f2f;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.card-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.dashboard-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    border-top: 5px solid #2196F3;
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+}
+
+h2 {
+    color: #d32f2f;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.input-group { margin-bottom: 1rem; }
+.input-group.row { display: flex; gap: 1rem; }
+
+input[type="text"], input[type="tel"], input[type="password"], select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+}
+
+.filter-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.toggle-box { 
+    display: flex; align-items: center; font-weight: bold; color: #d32f2f; margin-top: 15px; cursor: pointer;
+}
+.toggle-box input[type="checkbox"] { width: 18px; height: 18px; margin-right: 10px; cursor: pointer; }
+
+.donor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.donor-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    border-top: 5px solid #d32f2f;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    position: relative;
+    transition: 0.3s;
+}
+
+.donor-card:hover { transform: translateY(-5px); }
+.donor-card.locked { border-top: 5px solid #888; background: #f0f0f0; }
+
+.blood-badge {
+    position: absolute; top: 1rem; right: 1rem; background: #d32f2f; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: bold;
+}
+.locked .blood-badge { background: #888; }
+
+.trust-badge {
+    display: inline-block; padding: 3px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; margin-bottom: 10px;
+}
+.badge-gold { background: #FFD700; color: #000; }
+.badge-silver { background: #C0C0C0; color: #000; }
+.badge-bronze { background: #cd7f32; color: #fff; }
+
+.card-actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
+.btn {
+    flex: 1; text-align: center; text-decoration: none; padding: 10px; border-radius: 5px; font-weight: bold; color: white; border: none; cursor: pointer; font-size: 0.9rem;
+}
+.btn-call { background: #2196F3; }
+.btn-wa { background: #25D366; }
+.btn-donate { background: #ff9800; width: auto; padding: 10px 20px;}
+.btn-delete { background: #ff4d4d; width: auto; padding: 10px 20px; }
+.btn-logout { background: #555; margin-top: 20px; width: auto; padding: 10px 20px;}
+
+.cooldown-alert {
+    background: #555; color: white; padding: 8px; border-radius: 5px; font-size: 0.9rem; margin-top: 10px; text-align: center;
+}
