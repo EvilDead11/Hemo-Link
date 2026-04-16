@@ -16,6 +16,7 @@
             <button onclick="switchView('search')" class="nav-btn active" id="btn-search">🔍 Find Donors</button>
             <button onclick="switchView('register')" class="nav-btn" id="btn-register">➕ Register</button>
             <button onclick="loginUser()" class="nav-btn" id="btn-profile">⚙️ My Profile</button>
+            <button onclick="adminLogin()" class="nav-btn" id="btn-admin" style="background-color: #333;">🛡️ Admin</button>
         </nav>
     </header>
 
@@ -71,13 +72,25 @@
                         <input type="text" id="location" placeholder="City / Area (e.g., Andheri)" required>
                         <input type="password" id="pin" placeholder="Set 4-Digit Secret PIN" pattern="[0-9]{4}" maxlength="4" required title="Create a 4-digit PIN to secure your account">
                     </div>
-                    <button type="submit" class="btn-primary">Register as Donor</button>
+                    
+                    <div class="input-group" style="background: #f4f6f9; padding: 15px; border-radius: 5px; border: 1px solid #ccc;">
+                        <label for="certificate" style="display: block; font-weight: bold; margin-bottom: 8px; color: #d32f2f;">Upload Blood Test Certificate (Image/PDF)</label>
+                        <input type="file" id="certificate" accept="image/*,.pdf" required style="border: none; padding: 0;">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Submit for Admin Approval</button>
                 </form>
             </section>
         </div>
 
         <div id="view-dashboard" class="app-view dashboard-section" style="display: none;">
-            </div>
+        </div>
+
+        <div id="view-admin" class="app-view dashboard-section" style="display: none; border-top: 5px solid #333;">
+            <h2 style="color: #333;">Admin Dashboard | Pending Approvals</h2>
+            <p style="margin-bottom: 20px;">Review uploaded certificates and approve donors to make them visible in the search directory.</p>
+            <section id="pendingList" class="donor-grid"></section>
+        </div>
 
     </main>
 
