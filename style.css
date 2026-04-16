@@ -11,11 +11,10 @@ header {
     background-color: #d32f2f;
     color: white;
     text-align: center;
-    padding: 2rem 1rem 0 1rem; /* Adjusted padding for tabs */
+    padding: 2rem 1rem 0 1rem; 
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-/* NAYA NAVBAR STYLING */
 .navbar {
     display: flex;
     justify-content: center;
@@ -30,7 +29,7 @@ header {
     padding: 12px 25px;
     font-size: 1rem;
     font-weight: bold;
-    border-radius: 10px 10px 0 0; /* Tabs jaisa look (top rounded) */
+    border-radius: 10px 10px 0 0; 
     cursor: pointer;
     transition: 0.3s;
     border-bottom: 3px solid transparent;
@@ -39,9 +38,14 @@ header {
 .nav-btn:hover { background-color: rgba(255, 255, 255, 0.4); }
 
 .nav-btn.active {
-    background-color: #f4f6f9; /* Same as body background */
+    background-color: #f4f6f9; 
     color: #d32f2f;
     border-bottom: 3px solid #d32f2f;
+}
+
+#btn-admin.active {
+    color: #333;
+    border-bottom: 3px solid #333;
 }
 
 .container {
