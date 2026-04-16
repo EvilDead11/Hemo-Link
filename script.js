@@ -1,10 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Start by showing the Search View
     switchView('search');
 
     document.getElementById('donorForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
+        let fileInput = document.getElementById('certificate');
+        let fileName = fileInput.files.length > 0 ? fileInput.files[0].name : "No file";
+
         const newDonor = {
             id: Date.now(),
             name: document.getElementById('name').value,
@@ -12,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
             phone: document.getElementById('phone').value,
             location: document.getElementById('location').value,
             pin: document.getElementById('pin').value,
+            fileName: fileName,
+            status: "pending",
             donations: 0, 
             lastDonated: null 
         };
@@ -27,9 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('donors', JSON.stringify(donors));
 
         this.reset();
-        alert("Donor Registered Successfully! Please remember your 4-digit PIN.");
+        alert("Registration Submitted! You will appear in the directory once the Admin approves your medical certificate.");
         
-        // Form bharne ke baad wapas List view pe bhej do
         switchView('search');
     });
 
@@ -38,18 +41,24 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('urgentOnly').addEventListener('change', displayDonors);
 });
 
-// NAYA LOGIC: VIEW SWITCHER (Single Page Application Logic)
+function adminLogin() {
+    let pass = prompt("Enter Admin Password:");
+    if (pass === "admin123") {
+        switchView('admin');
+        renderAdmin();
+    } else {
+        alert("❌ Incorrect Password. Access Denied.");
+    }
+}
+
 function switchView(viewName) {
-    // Hide all views
     document.querySelectorAll('.app-view').forEach(view => view.style.display = 'none');
-    // Remove 'active' class from all buttons
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
 
-    // Show requested view and highlight button
     if(viewName === 'search') {
         document.getElementById('view-search').style.display = 'block';
         document.getElementById('btn-search').classList.add('active');
-        displayDonors(); // Refresh list when coming to search page
+        displayDonors(); 
     } 
     else if (viewName === 'register') {
         document.getElementById('view-register').style.display = 'block';
@@ -58,6 +67,10 @@ function switchView(viewName) {
     else if (viewName === 'dashboard') {
         document.getElementById('view-dashboard').style.display = 'block';
         document.getElementById('btn-profile').classList.add('active');
+    }
+    else if (viewName === 'admin') {
+        document.getElementById('view-admin').style.display = 'block';
+        document.getElementById('btn-admin').classList.add('active');
     }
 }
 
@@ -73,6 +86,7 @@ function displayDonors() {
     const COOLDOWN_MS = 90 * 24 * 60 * 60 * 1000; 
 
     donors.forEach(donor => {
+        if (donor.status === "pending") return;
         if (filterGroup !== "All" && donor.group !== filterGroup) return;
         if (filterLocation && !donor.location.toLowerCase().includes(filterLocation)) return;
 
@@ -120,6 +134,61 @@ function displayDonors() {
     });
 }
 
+function renderAdmin() {
+    const list = document.getElementById('pendingList');
+    let donors = JSON.parse(localStorage.getItem('donors')) || [];
+    list.innerHTML = ""; 
+
+    let pendingDonors = donors.filter(d => d.status === "pending");
+
+    if (pendingDonors.length === 0) {
+        list.innerHTML = "<p style='font-size: 1.1rem; color: #555;'>No pending approvals at the moment.</p>";
+        return;
+    }
+
+    pendingDonors.forEach(donor => {
+        const card = document.createElement('div');
+        card.className = `donor-card`;
+        card.style.borderTop = "5px solid #ff9800";
+        
+        card.innerHTML = `
+            <span class="blood-badge" style="background:#ff9800;">Pending</span>
+            <h3>${donor.name}</h3>
+            <p>🩸 Group: <b>${donor.group}</b></p>
+            <p>📍 Location: ${donor.location}</p>
+            <p>📞 +91 ${donor.phone}</p>
+            <div style="background: #f4f6f9; padding: 10px; margin-top: 10px; border-radius: 5px; font-size: 0.9rem;">
+                📄 <b>Document:</b> ${donor.fileName}
+            </div>
+            
+            <div class="card-actions">
+                <button class="btn btn-wa" onclick="approveDonor(${donor.id})">✅ Approve</button>
+                <button class="btn btn-delete" onclick="rejectDonor(${donor.id})">❌ Reject</button>
+            </div>
+        `;
+        list.appendChild(card);
+    });
+}
+
+function approveDonor(id) {
+    let donors = JSON.parse(localStorage.getItem('donors')) || [];
+    let index = donors.findIndex(d => d.id === id);
+    if(index !== -1) {
+        donors[index].status = "approved";
+        localStorage.setItem('donors', JSON.stringify(donors));
+        renderAdmin();
+    }
+}
+
+function rejectDonor(id) {
+    if(confirm("Are you sure you want to reject and delete this application?")) {
+        let donors = JSON.parse(localStorage.getItem('donors')) || [];
+        donors = donors.filter(d => d.id !== id);
+        localStorage.setItem('donors', JSON.stringify(donors));
+        renderAdmin();
+    }
+}
+
 function loginUser() {
     let phone = prompt("Enter your registered Phone Number:");
     if (!phone) return;
@@ -130,8 +199,12 @@ function loginUser() {
     if (userIndex !== -1) {
         let pin = prompt(`Enter your 4-digit PIN for ${donors[userIndex].name}:`);
         if (donors[userIndex].pin === pin) {
+            if (donors[userIndex].status === "pending") {
+                alert("⏳ Your profile is currently pending Admin approval. Please check back later.");
+                return;
+            }
             renderDashboard(donors[userIndex].id);
-            switchView('dashboard'); // Login successful, switch to dashboard tab
+            switchView('dashboard');
         } else {
             alert("❌ Incorrect PIN! Access Denied.");
         }
@@ -180,7 +253,7 @@ function renderDashboard(id) {
 }
 
 function logout() {
-    switchView('search'); // Logout karte hi wapas list pe le aao
+    switchView('search');
 }
 
 function markDonated(id) {
@@ -192,7 +265,7 @@ function markDonated(id) {
             donors[index].donations += 1; 
             donors[index].lastDonated = Date.now(); 
             localStorage.setItem('donors', JSON.stringify(donors));
-            renderDashboard(id); // Refresh dashboard view
+            renderDashboard(id); 
         }
     }
 }
@@ -203,6 +276,6 @@ function deleteDonor(id) {
         donors = donors.filter(d => d.id !== id);
         localStorage.setItem('donors', JSON.stringify(donors));
         alert("Account deleted successfully.");
-        logout(); // Delete hone ke baad logout karke search page pe bhej do
+        logout(); 
     }
 }
